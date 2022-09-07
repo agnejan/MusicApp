@@ -1,9 +1,17 @@
 .logo {
-  width: 15vh;
+  height: 80px;
+  width: auto;
 }
 
 body {
   font-family: "PT Mono", monospace;
+  background: radial-gradient(
+    circle at 7.5% 24%,
+    rgba(242, 194, 169, 0.402) 0%,
+    rgba(233, 215, 146, 0.335) 25.5%,
+    rgba(190, 228, 210, 0.407) 62.3%,
+    rgba(215, 248, 247, 0.416) 93.8%
+  );
 }
 
 li {
@@ -16,8 +24,8 @@ li {
     circle at 7.5% 24%,
     rgba(242, 194, 169, 0.512) 0%,
     rgba(233, 215, 146, 0.335) 25.5%,
-    rgba(190, 228, 210, 0.487) 62.3%,
-    rgba(215, 248, 247, 0.585) 93.8%
+    rgba(146, 221, 186, 0.653) 62.3%,
+    rgba(215, 248, 247, 0.775) 93.8%
   );
 }
 
@@ -33,4 +41,15 @@ h1 {
   font-family: "Roboto", sans-serif;
 }
 
+.show {
+  display: block;
+}
+
+.filters-container {
+  background-color: rgba(111, 121, 197, 0.06);
+}
+
+#filters-button {
+  max-width: 50px;
+}
 /* navbar */
