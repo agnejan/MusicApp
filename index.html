@@ -52,29 +52,38 @@
               discover new tunes 🎧
             </p>
 
-            <form class="d-flex m-3" role="search">
-              <input
-                class="form-control me-2"
-                type="search"
-                placeholder="🔎 e.g. pop "
-                aria-label="Search"
-              />
-              <button class="btn btn-outline-success" type="submit">GO</button>
-           
-              <button
-              type="button"
-              class="btn btn-light w-25 m-auto mt-2 mb-2"
-              id="filters-button"
-              >
-              +
-            </button>
+            <form class="m-3" role="search" id="search-box">
+              <div class="container-fluid">
+                <div class="row mb-3 flex-nowrap justify-content-center">
+                  <input
+                    class="form-control me-2 w-75"
+                    type="search"
+                    placeholder="🔎 e.g. pop"
+                    aria-label="Search"
+                    onkeyup="filterTable()"
+                    id="search-input"
+                  />
 
-            <div
-              class="filters-container rounded-2 p-4"
-              style="display: none"
-              id="filters-container"
-            >
-             
+                  <button class="btn btn-outline-success w-auto" type="submit">
+                    GO
+                  </button>
+                </div>
+              </div>
+
+              <div class="row">
+                <button
+                  type="button"
+                  class="btn btn-light w-25 m-auto mt-2 mb-2 fs-4"
+                  id="filters-button"
+                >
+                  +
+                </button>
+              </div>
+              <div
+                class="filters-container rounded-2 p-4"
+                style="display: none"
+                id="filters-container"
+              >
                 <div class="container">
                   <div class="row">
                     <div class="col-sm">
@@ -103,27 +112,25 @@
                     </div>
 
                     <div class="col-sm">
-                      <div class="form-group">
-                        <div class="custom-control custom-radio">
-                          <label class="custom-control-label" for="with-picture"
-                            >Only with image</label
-                          >
-                          <input
-                            type="radio"
-                            id="picture-select"
-                            name="with-picture"
-                            class="custom-control-input"
-                          />
-                        </div>
+                      <div class="form-check">
+                        <label class="form-check-label" for="image-only-check">
+                          With images only
+                        </label>
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value=""
+                          id="image-only-check"
+                        />
                       </div>
                     </div>
                   </div>
                 </div>
-              </form>
-            </div>
+              </div>
+            </form>
           </div>
 
-          <table class="table table-hover text-center mt-5">
+          <table class="table table-hover text-center mt-5" id="result-table">
             <thead>
               <tr>
                 <th>Image</th>
@@ -146,6 +153,3 @@
     <script src="main.js "></script>
   </body>
 </html>
-
-
-<!-- need to fix divs and wrap all user inputs into one form -->
