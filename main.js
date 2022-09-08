@@ -1,31 +1,47 @@
 // API DATA
-var data = rawData.results;
+// const data = rawData.results;
+
+let data;
+
+const url =
+  "https://api.discogs.com/database/search?q=rihana&key=ndqiGGFVIuiLYHmjQExU&secret=ADOGBtMyjsEJjQkyVcoNQTASKAuLfdCW";
+
+fetch(url)
+  .then((response) => {
+    console.log(response);
+    return response.json();
+  })
+  .then((data) => {
+    data = data.results;
+    console.log(data);
+  });
 
 //LOOP THROUGH THE ARRAY RESULTS
 
 var tbody = document.getElementById("tbody");
 
-for (var i = 0; i < data.length; i++) {
-  var tr = document.createElement("tr");
-  var image = document.createElement("img");
-  var imageUrl = data[i].cover_image;
-  image.src = imageUrl;
-  image.className = "rounded";
-  image.style.height = "80px";
-  image.style.width = "auto";
-  var td1 = document.createElement("td");
-  var td2 = document.createElement("td");
-  td2.className = "title";
-  td2.innerHTML = data[i].title;
-  var td3 = document.createElement("td");
-  td3.innerHTML = data[i].type;
+// for (var i = 0; i < data.length; i++) {
+//   var tr = document.createElement("tr");
+//   var image = document.createElement("img");
+//   var imageUrl = data[i].cover_image;
+//   image.src = imageUrl;
+//   image.className = "rounded";
+//   image.style.height = "80px";
+//   image.style.width = "auto";
+//   image.style.objectFit = "cover";
+//   var td1 = document.createElement("td");
+//   var td2 = document.createElement("td");
+//   td2.className = "title";
+//   td2.innerHTML = data[i].title;
+//   var td3 = document.createElement("td");
+//   td3.innerHTML = data[i].type;
 
-  td1.appendChild(image);
-  tr.appendChild(td1);
-  tr.appendChild(td2);
-  tr.appendChild(td3);
-  tbody.appendChild(tr);
-}
+//   td1.appendChild(image);
+//   tr.appendChild(td1);
+//   tr.appendChild(td2);
+//   tr.appendChild(td3);
+//   tbody.appendChild(tr);
+// }
 
 // FILTER SHOW MORE/LESS
 
