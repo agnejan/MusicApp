@@ -1,29 +1,63 @@
-// API DATA
-// const data = rawData.results;
+// API dataList
+// const dataList = rawData.results;
 
-let data;
+let dataList;
 
-const url =
-  "https://api.discogs.com/database/search?q=rihana&key=ndqiGGFVIuiLYHmjQExU&secret=ADOGBtMyjsEJjQkyVcoNQTASKAuLfdCW";
+const input = document.getElementById("search-input");
+const searchTerm = input.value;
 
-fetch(url)
-  .then((response) => {
-    console.log(response);
-    return response.json();
-  })
-  .then((data) => {
-    data = data.results;
-    console.log(data);
-  });
+const url = `https://api.discogs.com/database/search?q=${searchTerm}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`;
+
+function searchByKeyword() {
+  fetch(url)
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      dataList = data.results;
+      console.log("dataList", dataList);
+      displayTable();
+    });
+}
+
+const searchButton = document.querySelector("#search-button");
+searchButton.addEventListener("click", searchByKeyword());
+console.log(input.value);
 
 //LOOP THROUGH THE ARRAY RESULTS
 
-var tbody = document.getElementById("tbody");
+const tbody = document.getElementById("tbody");
 
-// for (var i = 0; i < data.length; i++) {
+function displayTable() {
+  dataList.forEach((dataItem) => {
+    const tr = document.createElement("tr");
+    const image = document.createElement("img");
+    const imageUrl = dataItem.cover_image;
+    image.src = imageUrl;
+    image.className = "rounded";
+    image.style.height = "80px";
+    image.style.width = "auto";
+    image.style.objectFit = "cover";
+    const td1 = document.createElement("td");
+    const td2 = document.createElement("td");
+    td2.className = "title";
+    td2.innerHTML = dataItem.title;
+    const td3 = document.createElement("td");
+    td3.innerHTML = dataItem.type;
+    td1.appendChild(image);
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.appendChild(td3);
+    tbody.appendChild(tr);
+  });
+}
+
+// const tbody = document.getElementById("tbody");
+
+// for (var i = 0; i < dataList.length; i++) {
 //   var tr = document.createElement("tr");
 //   var image = document.createElement("img");
-//   var imageUrl = data[i].cover_image;
+//   var imageUrl = dataList[i].cover_image;
 //   image.src = imageUrl;
 //   image.className = "rounded";
 //   image.style.height = "80px";
@@ -32,9 +66,9 @@ var tbody = document.getElementById("tbody");
 //   var td1 = document.createElement("td");
 //   var td2 = document.createElement("td");
 //   td2.className = "title";
-//   td2.innerHTML = data[i].title;
+//   td2.innerHTML = dataList[i].title;
 //   var td3 = document.createElement("td");
-//   td3.innerHTML = data[i].type;
+//   td3.innerHTML = dataList[i].type;
 
 //   td1.appendChild(image);
 //   tr.appendChild(td1);
@@ -45,8 +79,8 @@ var tbody = document.getElementById("tbody");
 
 // FILTER SHOW MORE/LESS
 
-var filters = document.getElementById("filters-container");
-var filtersButton = document.getElementById("filters-button");
+const filters = document.getElementById("filters-container");
+const filtersButton = document.getElementById("filters-button");
 
 function displayFilters() {
   if (filters.style.display === "none") {
@@ -59,8 +93,6 @@ function displayFilters() {
 }
 
 filtersButton.addEventListener("click", displayFilters);
-
-//OPENING CLOSING THE FILTER FIRST ATTEMPT
 
 // function displayFilters() {
 //   console.log(filters.style.display);
@@ -82,7 +114,7 @@ filtersButton.addEventListener("click", displayFilters);
 
 // filtersButton.addEventListener("click", closeFilters); //THIS METHOD DOESNT WORK BECAUSE THERE IS TWO EVENTLSITENERS FOR THE SAME BUTTON? ASK LUCAS
 
-//SEARCH BAR TERM RESULT FILTERING BASED ON TITLE
+//SEARCH BAR TERM dataItem FILTERING BASED ON TITLE
 
 // const list = document.querySelectorAll(".title");
 // console.log(list);
@@ -101,25 +133,25 @@ filtersButton.addEventListener("click", displayFilters);
 //   });
 // });
 
-function filterTable() {
-  var input, inputUpperCase, tableBody, tableRow, titlesList, i, titleValue;
-  input = document.getElementById("search-input");
-  // inputUpperCase = input.value.toUpperCase();
-  tableBody = document.getElementById("tbody");
-  tableRow = tableBody.getElementsByTagName("tr");
+// function filterTable() {
+//   let input, tableBody, tableRow, titlesList, i, titleValue;
+//   input = document.getElementById("search-input");
+//   // inputUpperCase = input.value.toUpperCase();
+//   tableBody = document.getElementById("tbody");
+//   tableRow = tableBody.getElementsByTagName("tr");
 
-  for (i = 0; i < tableRow.length; i++) {
-    titlesList = tableRow[i].getElementsByTagName("td")[1]; // here it's taking the 1st index position of out of 3 td elements
-    titleValue = titlesList.textContent || titlesList.innerText; // should only use innerText here ? ask Lucas
-    console.log(titlesList);
-    if (titlesList) {
-      // here we are saying if titles data is present? ask Lucas
-      if (titleValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
-        //gets the index input.value within titleValues
-        tableRow[i].style.display = ""; // this is needed to reset the list on keychange in the searchbar - don't understand this fully yet ask Lucas
-      } else {
-        tableRow[i].style.display = "none";
-      }
-    }
-  }
-}
+//   for (i = 0; i < tableRow.length; i++) {
+//     titlesList = tableRow[i].getElementsByTagName("td")[1]; // here it's taking the 1st index position of out of 3 td elements
+//     titleValue = titlesList.textContent || titlesList.innerText; // should only use innerText here ? ask Lucas
+//     console.log(titlesList);
+//     if (titlesList) {
+//       // here we are saying if titles dataList is present? ask Lucas
+//       if (titleValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
+//         //gets the index input.value within titleValues
+//         tableRow[i].style.display = ""; // this is needed to reset the list on keychange in the searchbar - don't understand this fully yet ask Lucas
+//       } else {
+//         tableRow[i].style.display = "none";
+//       }
+//     }
+//   }
+// }
