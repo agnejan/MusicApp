@@ -1,35 +1,67 @@
 // API dataList
 // const dataList = rawData.results;
 
-let dataList;
+// let dataList; // becuase we initiate it here it gets reassigned a new value in line21 which is still accessible then from global scope? if would initiate it with let in line 21 then it would not be available in global scope
 
-const input = document.getElementById("search-input");
-const searchTerm = input.value;
-
-const url = `https://api.discogs.com/database/search?q=${searchTerm}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`;
-
-function searchByKeyword() {
-  fetch(url)
-    .then((response) => {
-      return response.json();
-    })
-    .then((data) => {
-      dataList = data.results;
-      console.log("dataList", dataList);
-      displayTable();
-    });
-}
-
+// GLOBAL VARIABLES
 const searchButton = document.querySelector("#search-button");
-searchButton.addEventListener("click", searchByKeyword());
-console.log(input.value);
+
+//FETCHING THE RESULTS
+
+// searchButton.addEventListener("click", searchByKeywordAfterClick); //  how does this work with and without parentheses after function call? also how to call searhcByKeyword function expression? ask Lucas
+//() call the function wihtout waiting for click event, wihtout () will wait for event
+
+// function searchByKeywordAfterClick(event) {
+//   searchByKeyword(event);
+// }
+
+// GET URL FUNCTION FOR DYNAMIC FETCH WITH USER INPUT
+
+// function getUrl() {
+//   let url = `https://api.discogs.com/database/search?q=${input.value}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`;
+//   console.log(url);
+//   return url; //why doesnt work when use searchTerm.
+// } // this is not needed as moving the URL to inside the function makes the URL dynamic based on user input
+
+//FETCH.THEN EXPRESSION
+
+// function searchByKeyword(event) {
+//   const url = `https://api.discogs.com/database/search?q=${input.value}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`;
+//   event.preventDefault(); //without this the show of results after "click" doesnt work -why ? becaus the HTML form refreshes by default after clisking submit type button
+//   fetch(url)
+//     // fetch(getUrl())
+//     .then((response) => {
+//       document.getElementById("loader").style.display = "block";
+//       return response.json();
+//     })
+//     .then((data) => {
+//       document.getElementById("loader").style.display = "none";
+//       dataList = data.results;
+//       displayTable();
+//     });
+// }
+
+// ASYNC AWAIT EXPRESSION
+
+const searchByKeyword = async (event) => {
+  event.preventDefault();
+  const input = document.getElementById("search-input");
+  const url = `https://api.discogs.com/database/search?q=${input.value}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`; // having url as global variable doesnt work because input gets defined as "" on first load and never gets updated after that
+  const response = await fetch(url);
+  const jsonResult = await response.json();
+  const dataList = await jsonResult.results;
+  displayTable(dataList); //passing dataList here makes the display table to be connected to the await and so laod only when data is ready
+};
+
+searchButton.addEventListener("click", searchByKeyword);
 
 //LOOP THROUGH THE ARRAY RESULTS
 
 const tbody = document.getElementById("tbody");
 
-function displayTable() {
-  dataList.forEach((dataItem) => {
+function displayTable(data) {
+  tbody.innerHTML = ""; // make sure it's not inside the loop so not repeat it for all items
+  data.forEach((dataItem) => {
     const tr = document.createElement("tr");
     const image = document.createElement("img");
     const imageUrl = dataItem.cover_image;
@@ -112,7 +144,7 @@ filtersButton.addEventListener("click", displayFilters);
 //   }
 // }
 
-// filtersButton.addEventListener("click", closeFilters); //THIS METHOD DOESNT WORK BECAUSE THERE IS TWO EVENTLSITENERS FOR THE SAME BUTTON? ASK LUCAS
+// filtersButton.addEventListener("click", closeFilters); //this method doesnt work because it uses 2 eventlisteners for the same object? ask Lucas
 
 //SEARCH BAR TERM dataItem FILTERING BASED ON TITLE
 
