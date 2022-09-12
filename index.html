@@ -56,7 +56,7 @@
               <div class="container-fluid">
                 <div class="row mb-3 flex-nowrap justify-content-center">
                   <input
-                    class="form-control me-2 w-75"
+                    class="form-control me-2 w-75 search-input-box"
                     type="search"
                     placeholder="🔎 e.g. pop"
                     aria-label="Search"
@@ -64,7 +64,7 @@
                   />
 
                   <button
-                    class="btn btn-outline-success w-auto"
+                    class="btn btn-outline-success w-auto search-button"
                     id="search-button"
                     type="submit"
                   >
@@ -76,14 +76,14 @@
               <div class="row">
                 <button
                   type="button"
-                  class="btn btn-light w-25 m-auto mt-2 mb-2 fs-4"
+                  class="btn btn-light w-25 m-auto mt-2 mb-2 fs-4 filters-button"
                   id="filters-button"
                 >
                   +
                 </button>
               </div>
               <div
-                class="filters-container rounded-2 p-4"
+                class="filters-container rounded-3 p-4"
                 style="display: none"
                 id="filters-container"
               >
@@ -145,6 +145,49 @@
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
+            <div class="container">
+              <div class="row">
+                <div class="col-sm">
+                  <div class="card" style="width: 18rem">
+                    <img class="card-img-top" src="..." alt="Card image cap" />
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">
+                        Some quick example text to build on the card title and
+                        make up the bulk of the card's content.
+                      </p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <div class="card" style="width: 18rem">
+                    <img class="card-img-top" src="..." alt="Card image cap" />
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">
+                        Some quick example text to build on the card title and
+                        make up the bulk of the card's content.
+                      </p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm">
+                  <div class="card" style="width: 18rem">
+                    <img class="card-img-top" src="..." alt="Card image cap" />
+                    <div class="card-body">
+                      <h5 class="card-title">Card title</h5>
+                      <p class="card-text">
+                        Some quick example text to build on the card title and
+                        make up the bulk of the card's content.
+                      </p>
+                      <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </table>
           <p id="loader" style="display: none">Loading....</p>
         </section>

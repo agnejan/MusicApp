@@ -52,4 +52,25 @@ h1 {
 #filters-button {
   max-width: 50px;
 }
+
+.card {
+  background-color: rgba(240, 248, 255, 0.073);
+}
+
+.card:hover {
+  box-shadow: 10px 5px 5px rgba(37, 36, 36, 0.148);
+}
+
+.search-button {
+  border-radius: 50px;
+}
+
+.search-input-box {
+  border-radius: 50px;
+}
+
+.filters-button {
+  border-radius: 50%;
+}
+
 /* navbar */

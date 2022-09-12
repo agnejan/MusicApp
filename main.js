@@ -84,6 +84,11 @@ function displayTable(data) {
   });
 }
 
+function displayTable(data) {
+  tbody.innerHTML = ""; // make sure it's not inside the loop so not repeat it for all items
+  data.forEach((dataItem) => {});
+}
+
 // const tbody = document.getElementById("tbody");
 
 // for (var i = 0; i < dataList.length; i++) {
