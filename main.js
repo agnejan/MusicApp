@@ -1,7 +1,9 @@
 // API dataList
 // const dataList = rawData.results;
 
-// let dataList; // becuase we initiate it here it gets reassigned a new value in line21 which is still accessible then from global scope? if would initiate it with let in line 21 then it would not be available in global scope
+//ENTRY POINT
+
+let dataList; // becuase we initiate it here it gets reassigned a new value in line21 which is still accessible then from global scope? if would initiate it with let in line 21 then it would not be available in global scope
 
 // GLOBAL VARIABLES
 const searchButton = document.querySelector("#search-button");
@@ -9,7 +11,7 @@ const searchButton = document.querySelector("#search-button");
 //FETCHING THE RESULTS
 
 // searchButton.addEventListener("click", searchByKeywordAfterClick); //  how does this work with and without parentheses after function call? also how to call searhcByKeyword function expression? ask Lucas
-//() call the function wihtout waiting for click event, wihtout () will wait for event
+//with () calls the function wihtout waiting for click event, wihtout () will wait for event
 
 // function searchByKeywordAfterClick(event) {
 //   searchByKeyword(event);
@@ -42,51 +44,86 @@ const searchButton = document.querySelector("#search-button");
 // }
 
 // ASYNC AWAIT EXPRESSION
+const input = document.getElementById("search-input");
 
 const searchByKeyword = async (event) => {
   event.preventDefault();
-  const input = document.getElementById("search-input");
+
   const url = `https://api.discogs.com/database/search?q=${input.value}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`; // having url as global variable doesnt work because input gets defined as "" on first load and never gets updated after that
   const response = await fetch(url);
   const jsonResult = await response.json();
-  const dataList = await jsonResult.results;
-  displayTable(dataList); //passing dataList here makes the display table to be connected to the await and so laod only when data is ready
+  dataList = await jsonResult.results;
+  console.log(dataList);
+  displayGrid(dataList); //passing dataList here makes the display table to be connected to the await and so laod only when data is ready
 };
 
-searchButton.addEventListener("click", searchByKeyword);
-
 //LOOP THROUGH THE ARRAY RESULTS
+const resultsContainer = document.getElementById("results-container");
 
-const tbody = document.getElementById("tbody");
-
-function displayTable(data) {
-  tbody.innerHTML = ""; // make sure it's not inside the loop so not repeat it for all items
+function displayGrid(data) {
+  resultsContainer.innerHTML = ""; // make sure it's not inside the loop so not repeat it for all items
   data.forEach((dataItem) => {
-    const tr = document.createElement("tr");
+    //can use if statement for every i dividible by 3 and append everything until that point to to that div
+
+    const div1 = document.createElement("div");
+    div1.className = "col-sm d-flex justify-content-center";
+
+    const div2 = document.createElement("div");
+    div2.className = "card d-flex flex-row p-2 mb-3 ";
+    div2.style = "width: 18rem";
+
+    const div3 = document.createElement("div");
+    div3.className =
+      "d-flex flex-column justify-content-center card-left-container";
+
     const image = document.createElement("img");
     const imageUrl = dataItem.cover_image;
     image.src = imageUrl;
     image.className = "rounded";
-    image.style.height = "80px";
-    image.style.width = "auto";
-    image.style.objectFit = "cover";
-    const td1 = document.createElement("td");
-    const td2 = document.createElement("td");
-    td2.className = "title";
-    td2.innerHTML = dataItem.title;
-    const td3 = document.createElement("td");
-    td3.innerHTML = dataItem.type;
-    td1.appendChild(image);
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    tr.appendChild(td3);
-    tbody.appendChild(tr);
-  });
-}
+    image.alt = "Card image cap";
 
-function displayTable(data) {
-  tbody.innerHTML = ""; // make sure it's not inside the loop so not repeat it for all items
-  data.forEach((dataItem) => {});
+    const div4 = document.createElement("div");
+    div4.className = "card-body";
+
+    const h5 = document.createElement("h5");
+    h5.className = "card-title text-nowrap text-truncate";
+    h5.innerHTML = dataItem.title;
+
+    const h6_1 = document.createElement("h6");
+    h6_1.className = "text-muted card-type";
+    h6_1.innerHTML = dataItem.type.toUpperCase();
+
+    const h6_2 = document.createElement("h6");
+    h6_2.className = "text-muted card-year";
+    const yearOfResult = dataItem.year;
+    const correctedYear = function checkYear() {
+      if (yearOfResult === null) {
+      }
+      yearOfResult = "";
+    };
+    return yearOfResult; //continue from here
+  });
+
+  h6_2.innerHTML = correctedYear;
+
+  const h6_3 = document.createElement("h6");
+  h6_3.className = "text-muted card-genre text-nowrap text-truncate";
+  h6_3.innerHTML = dataItem.genre;
+
+  const a = document.createElement("a");
+  a.className = "btn btn-outline-primary add-to-library-btn";
+  a.innerHTML = "Add to library";
+
+  resultsContainer.appendChild(div1);
+  div1.appendChild(div2);
+  div2.appendChild(div3);
+  div3.appendChild(image);
+  div2.appendChild(div4);
+  div4.appendChild(h5);
+  div4.appendChild(h6_1);
+  div4.appendChild(h6_2);
+  div4.appendChild(h6_3);
+  div4.appendChild(a);
 }
 
 // const tbody = document.getElementById("tbody");
@@ -192,3 +229,55 @@ filtersButton.addEventListener("click", displayFilters);
 //     }
 //   }
 // }
+
+// FILTERS
+
+// const imageOnlyCheckbox = document.getElementById("image-only-check");
+// imageOnlyCheckbox.addEventListener("change", function (e) {
+//   const card = document.querySelector(".card");
+//   if (imageOnlyCheckbox.checked) {
+//     if (card.cover_image) {
+//       card.style.display = "block";
+//     } else {
+//       card.style.display = "none";
+//     }
+//   }
+// });
+
+function setEventListeners() {
+  searchButton.addEventListener("click", searchByKeyword);
+  const checkboxes = document.querySelectorAll(".form-check-input");
+  const checkBoxesArray = Array.from(checkboxes);
+  checkBoxesArray.forEach((box) => {
+    //eventListeners cannot be added to all array-like items at once, need to use for loop for this
+    box.addEventListener("change", filterResults);
+  });
+}
+
+setEventListeners();
+
+function getCheckedValues() {
+  const checkboxes = document.querySelectorAll(".form-check-input");
+  const checkBoxesArray = Array.from(checkboxes);
+  const checkedValueArray = [];
+  checkBoxesArray.forEach((item) => {
+    // const checkedBox = item.checked;
+    if (item.checked) {
+      checkedValueArray.push(item.value);
+    }
+  });
+  return checkedValueArray;
+}
+
+function filterResults() {
+  const checkedValues = getCheckedValues();
+  const filteredResults = [];
+  dataList.forEach((dataItem) => {
+    checkedValues.forEach((checkboxValue) => {
+      if (dataItem.type === checkboxValue) {
+        filteredResults.push(dataItem);
+      }
+    });
+  });
+  displayGrid(filteredResults);
+}

@@ -83,28 +83,95 @@
                 </button>
               </div>
               <div
-                class="filters-container rounded-3 p-4"
+                class="filters-container rounded-3 p-4 mt-2"
                 style="display: none"
                 id="filters-container"
               >
                 <div class="container">
                   <div class="row">
                     <div class="col-sm">
-                      <div class="form-group">
-                        <label for="type-select">Type:</label>
-                        <select class="form-control" id="type-select">
-                          <option>Artist</option>
-                          <option>Label</option>
-                          <option>Album</option>
-                          <option>Release</option>
-                        </select>
+                      <div class="form-check">
+                        <p class="fw-bold">Type:</p>
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="artist"
+                          id="artist-check"
+                        />
+                        <label class="form-check-label" for="artist-check">
+                          Artist
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="album"
+                          id="album-check"
+                        />
+                        <label class="form-check-label" for="album-check">
+                          Album
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="release"
+                          id="release-check"
+                        />
+                        <label class="form-check-label" for="release-check">
+                          Release
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="master"
+                          id="master-check"
+                        />
+                        <label class="form-check-label" for="master-check">
+                          Master
+                        </label>
+                      </div>
+                      <div class="form-check">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="label"
+                          id="label-check"
+                        />
+                        <label class="form-check-label" for="label-check">
+                          Label
+                        </label>
+                      </div>
+                    </div>
+
+                    <div class="col-sm">
+                      <div class="form-check">
+                        <p>With images only</p>
+                        <label class="form-check-label" for="image-only-check">
+                          Yes
+                        </label>
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          value="image"
+                          id="image-only-check"
+                        />
                       </div>
                     </div>
 
                     <div class="col-sm">
                       <div class="form-group">
                         <label for="type-select">Genre of album:</label>
-                        <select class="form-control" id="type-select">
+                        <select
+                          class="form-control border-0"
+                          id="type-select"
+                          disabled
+                        >
+                          <option>All</option>
                           <option>Electronic</option>
                           <option>Soul</option>
                           <option>HipHop</option>
@@ -113,27 +180,13 @@
                         </select>
                       </div>
                     </div>
-
-                    <div class="col-sm">
-                      <div class="form-check">
-                        <label class="form-check-label" for="image-only-check">
-                          With images only
-                        </label>
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          value=""
-                          id="image-only-check"
-                        />
-                      </div>
-                    </div>
                   </div>
                 </div>
               </div>
             </form>
           </div>
 
-          <table
+          <!-- <table
             class="table table-hover text-center mt-5"
             id="api-results-table"
           >
@@ -145,58 +198,23 @@
               </tr>
             </thead>
             <tbody id="tbody"></tbody>
-            <div class="container">
-              <div class="row">
-                <div class="col-sm">
-                  <div class="card" style="width: 18rem">
-                    <img class="card-img-top" src="..." alt="Card image cap" />
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
-                      </p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm">
-                  <div class="card" style="width: 18rem">
-                    <img class="card-img-top" src="..." alt="Card image cap" />
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
-                      </p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-sm">
-                  <div class="card" style="width: 18rem">
-                    <img class="card-img-top" src="..." alt="Card image cap" />
-                    <div class="card-body">
-                      <h5 class="card-title">Card title</h5>
-                      <p class="card-text">
-                        Some quick example text to build on the card title and
-                        make up the bulk of the card's content.
-                      </p>
-                      <a href="#" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </table>
+          </table> -->
+          <div class="container mb-3">
+            <div
+              class="row justify-content-center"
+              id="results-container"
+            ></div>
+          </div>
+
           <p id="loader" style="display: none">Loading....</p>
         </section>
       </div>
     </div>
 
+    <!-- JavaScript Bundle with Popper -->
     <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
       crossorigin="anonymous"
     ></script>
     <!-- <script src="data.js"></script> -->

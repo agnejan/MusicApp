@@ -35,6 +35,9 @@ li {
 
 img {
   max-width: 80px;
+  height: 80px;
+  width: auto;
+  object-fit: cover;
 }
 
 h1 {
@@ -46,7 +49,7 @@ h1 {
 }
 
 .filters-container {
-  background-color: rgba(111, 121, 197, 0.06);
+  background-color: rgba(159, 96, 96, 0.077);
 }
 
 #filters-button {
@@ -54,7 +57,9 @@ h1 {
 }
 
 .card {
-  background-color: rgba(240, 248, 255, 0.073);
+  background-color: rgba(159, 96, 96, 0.077);
+  height: 200px;
+  border: none;
 }
 
 .card:hover {
@@ -71,6 +76,28 @@ h1 {
 
 .filters-button {
   border-radius: 50%;
+}
+
+.add-to-library-btn {
+  font-size: 12px;
+}
+
+.card-left-container {
+  width: 80px;
+}
+
+.card-title {
+  font-size: 20px;
+  max-width: 160px;
+}
+
+.card-type {
+  font-size: 15px;
+}
+.card-year,
+.card-genre {
+  font-size: 13px;
+  max-width: 160px;
 }
 
 /* navbar */
