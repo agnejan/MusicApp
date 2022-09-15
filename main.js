@@ -1,16 +1,22 @@
 // API dataList
 // const dataList = rawData.results;
 
-//ENTRY POINT
+// TOOLTIPS
 
-let dataList; // becuase we initiate it here it gets reassigned a new value in line21 which is still accessible then from global scope? if would initiate it with let in line 21 then it would not be available in global scope
+const tooltipTriggerList = document.querySelectorAll(
+  '[data-bs-toggle="tooltip"]'
+);
+const tooltipList = [...tooltipTriggerList].map(
+  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+);
 
 // GLOBAL VARIABLES
-const searchButton = document.querySelector("#search-button");
+let dataList;
 
 //FETCHING THE RESULTS
 
-// searchButton.addEventListener("click", searchByKeywordAfterClick); //  how does this work with and without parentheses after function call? also how to call searhcByKeyword function expression? ask Lucas
+// searchButton.addEventListener("click", searchByKeywordAfterClick); //  how does this work with and without parentheses after function call? also how to call searhcByKeyword function expression?
+
 //with () calls the function wihtout waiting for click event, wihtout () will wait for event
 
 // function searchByKeywordAfterClick(event) {
@@ -55,9 +61,10 @@ const searchByKeyword = async (event) => {
   dataList = await jsonResult.results;
   console.log(dataList);
   displayGrid(dataList); //passing dataList here makes the display table to be connected to the await and so laod only when data is ready
+  filterByImage(dataList);
 };
 
-//LOOP THROUGH THE ARRAY RESULTS
+//CREATING THE GRID OF RESULTS
 const resultsContainer = document.getElementById("results-container");
 
 function displayGrid(data) {
@@ -88,6 +95,8 @@ function displayGrid(data) {
     const h5 = document.createElement("h5");
     h5.className = "card-title text-nowrap text-truncate";
     h5.innerHTML = dataItem.title;
+    h5.setAttribute("data-bs-toggle", "tooltip");
+    h5.setAttribute("title", dataItem.title); // why doesnt work? ask Lucas
 
     const h6_1 = document.createElement("h6");
     h6_1.className = "text-muted card-type";
@@ -95,35 +104,35 @@ function displayGrid(data) {
 
     const h6_2 = document.createElement("h6");
     h6_2.className = "text-muted card-year";
-    const yearOfResult = dataItem.year;
-    const correctedYear = function checkYear() {
-      if (yearOfResult === null) {
-      }
-      yearOfResult = "";
-    };
-    return yearOfResult; //continue from here
+    // const yearOfResult = dataItem.year;
+    // const correctedYear = function () {
+    //   if (yearOfResult === "undefined") {
+    //     yearOfResult = "";
+    //   }
+    //   return yearOfResult;
+    // }; why this didnt work ? ask Lucas
+
+    h6_2.innerHTML = dataItem.year ?? " ";
+
+    const h6_3 = document.createElement("h6");
+    h6_3.className = "text-muted card-genre text-nowrap text-truncate";
+    h6_3.innerHTML = dataItem.genre ?? " ";
+
+    const a = document.createElement("a");
+    a.className = "btn btn-outline-primary add-to-library-btn";
+    a.innerHTML = "Add to library";
+
+    resultsContainer.appendChild(div1);
+    div1.appendChild(div2);
+    div2.appendChild(div3);
+    div3.appendChild(image);
+    div2.appendChild(div4);
+    div4.appendChild(h5);
+    div4.appendChild(h6_1);
+    div4.appendChild(h6_2);
+    div4.appendChild(h6_3);
+    div4.appendChild(a);
   });
-
-  h6_2.innerHTML = correctedYear;
-
-  const h6_3 = document.createElement("h6");
-  h6_3.className = "text-muted card-genre text-nowrap text-truncate";
-  h6_3.innerHTML = dataItem.genre;
-
-  const a = document.createElement("a");
-  a.className = "btn btn-outline-primary add-to-library-btn";
-  a.innerHTML = "Add to library";
-
-  resultsContainer.appendChild(div1);
-  div1.appendChild(div2);
-  div2.appendChild(div3);
-  div3.appendChild(image);
-  div2.appendChild(div4);
-  div4.appendChild(h5);
-  div4.appendChild(h6_1);
-  div4.appendChild(h6_2);
-  div4.appendChild(h6_3);
-  div4.appendChild(a);
 }
 
 // const tbody = document.getElementById("tbody");
@@ -186,7 +195,7 @@ filtersButton.addEventListener("click", displayFilters);
 //   }
 // }
 
-// filtersButton.addEventListener("click", closeFilters); //this method doesnt work because it uses 2 eventlisteners for the same object? ask Lucas
+// filtersButton.addEventListener("click", closeFilters); //this method doesnt work because it uses 2 eventlisteners for the same object?
 
 //SEARCH BAR TERM dataItem FILTERING BASED ON TITLE
 
@@ -216,13 +225,13 @@ filtersButton.addEventListener("click", displayFilters);
 
 //   for (i = 0; i < tableRow.length; i++) {
 //     titlesList = tableRow[i].getElementsByTagName("td")[1]; // here it's taking the 1st index position of out of 3 td elements
-//     titleValue = titlesList.textContent || titlesList.innerText; // should only use innerText here ? ask Lucas
+//     titleValue = titlesList.textContent || titlesList.innerText; // should only use innerText here ?
 //     console.log(titlesList);
 //     if (titlesList) {
-//       // here we are saying if titles dataList is present? ask Lucas
+//       // here we are saying if titles dataList is present?
 //       if (titleValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
 //         //gets the index input.value within titleValues
-//         tableRow[i].style.display = ""; // this is needed to reset the list on keychange in the searchbar - don't understand this fully yet ask Lucas
+//         tableRow[i].style.display = ""; // this is needed to reset the list on keychange in the searchbar - don't understand this fully yet
 //       } else {
 //         tableRow[i].style.display = "none";
 //       }
@@ -245,23 +254,23 @@ filtersButton.addEventListener("click", displayFilters);
 // });
 
 function setEventListeners() {
+  const searchButton = document.querySelector("#search-button");
   searchButton.addEventListener("click", searchByKeyword);
   const checkboxes = document.querySelectorAll(".form-check-input");
   const checkBoxesArray = Array.from(checkboxes);
   checkBoxesArray.forEach((box) => {
     //eventListeners cannot be added to all array-like items at once, need to use for loop for this
-    box.addEventListener("change", filterResults);
+    box.addEventListener("change", filterByImage);
   });
 }
 
 setEventListeners();
 
-function getCheckedValues() {
-  const checkboxes = document.querySelectorAll(".form-check-input");
+function getTypeCheckedValues() {
+  const checkboxes = document.querySelectorAll(".check-type");
   const checkBoxesArray = Array.from(checkboxes);
   const checkedValueArray = [];
   checkBoxesArray.forEach((item) => {
-    // const checkedBox = item.checked;
     if (item.checked) {
       checkedValueArray.push(item.value);
     }
@@ -269,9 +278,10 @@ function getCheckedValues() {
   return checkedValueArray;
 }
 
-function filterResults() {
-  const checkedValues = getCheckedValues();
+function filterByType() {
+  const checkedValues = getTypeCheckedValues();
   const filteredResults = [];
+  console.log(checkedValues);
   dataList.forEach((dataItem) => {
     checkedValues.forEach((checkboxValue) => {
       if (dataItem.type === checkboxValue) {
@@ -280,4 +290,22 @@ function filterResults() {
     });
   });
   displayGrid(filteredResults);
+} // can I use .filter because I have several values to match? ask Lucas
+
+function filterByImage() {
+  const imageCheckbox = document.getElementById("image-only-check");
+  console.log(imageCheckbox);
+  const filteredDataWithImages = dataList.filter((item) => {
+    console.log(imageCheckbox.checked);
+    if (imageCheckbox.checked) {
+      return !item.cover_image.includes(".gif");
+    } else {
+      return true; //check this later
+    }
+  });
+  console.log(filteredDataWithImages);
+  displayGrid(filteredDataWithImages);
+  return filteredDataWithImages;
 }
+
+//combining them
