@@ -52,10 +52,12 @@
               src="./images/music-note.png"
               class="mx-auto d-flex m-3 logo"
             />
-            <p class="text-center fs-5 mt-3">
-              Search your favorite artists, genres, styles. Get insipired and
-              discover new tunes 🎧
-            </p>
+            <span>
+              <p class="text-center fs-5 mt-3">
+                Search your favorite artists, genres, styles. Get insipired and
+                discover new tunes 🎧
+              </p></span
+            >
 
             <form class="m-3" role="search" id="search-box">
               <div class="container-fluid">
@@ -72,6 +74,8 @@
                     class="btn btn-outline-success w-auto search-button"
                     id="search-button"
                     type="submit"
+                    data-bs-toggle="tooltip"
+                    title="Search"
                   >
                     GO
                   </button>
@@ -83,12 +87,14 @@
                   type="button"
                   class="btn btn-light w-25 m-auto mt-2 mb-2 fs-4 filters-button"
                   id="filters-button"
+                  data-bs-toggle="tooltip"
+                  title="Filters"
                 >
                   +
                 </button>
               </div>
               <div
-                class="filters-container rounded-3 p-4 mt-2"
+                class="filters-container rounded-4 p-4 mt-2"
                 style="display: none"
                 id="filters-container"
               >
@@ -118,7 +124,7 @@
                           Album
                         </label>
                       </div>
-                      <div class="form-check">
+                      <!-- <div class="form-check">
                         <input
                           class="form-check-input check-type"
                           type="checkbox"
@@ -128,8 +134,8 @@
                         <label class="form-check-label" for="release-check">
                           Release
                         </label>
-                      </div>
-                      <div class="form-check">
+                      </div> -->
+                      <!-- <div class="form-check">
                         <input
                           class="form-check-input check-type"
                           type="checkbox"
@@ -139,7 +145,7 @@
                         <label class="form-check-label" for="master-check">
                           Master
                         </label>
-                      </div>
+                      </div> -->
                       <div class="form-check">
                         <input
                           class="form-check-input check-type"
@@ -171,17 +177,18 @@
                     <div class="col-sm">
                       <div class="form-group">
                         <label for="type-select">Genre of album:</label>
-                        <select
-                          class="form-control border-0"
-                          id="type-select"
-                          disabled
-                        >
-                          <option>All</option>
-                          <option>Electronic</option>
-                          <option>Soul</option>
-                          <option>HipHop</option>
-                          <option>Jazz</option>
-                          <option>Rock</option>
+                        <select class="form-control border-0" id="type-select">
+                          <option value="all">All</option>
+                          <option value="classical">Classical</option>
+                          <option value="disco">Disco</option>
+                          <option value="electronic">Electronic</option>
+                          <option value="hiphop">HipHop</option>
+                          <option value="house">House</option>
+                          <option value="jazz">Jazz</option>
+                          <option value="soul">Soul</option>
+                          <option value="rock">Rock</option>
+                          <option value="pop">Pop</option>
+                          <option value="techno">Techno</option>
                         </select>
                       </div>
                     </div>
@@ -223,6 +230,15 @@
       crossorigin="anonymous"
     ></script>
     <!-- <script src="data.js"></script> -->
+
+    <script>
+      const tooltipTriggerList = document.querySelectorAll(
+        '[data-bs-toggle="tooltip"]'
+      );
+      const tooltipList = [...tooltipTriggerList].map(
+        (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+      );
+    </script>
     <script src="main.js "></script>
   </body>
 </html>

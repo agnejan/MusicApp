@@ -1,74 +1,49 @@
-// API dataList
-// const dataList = rawData.results;
-
-// TOOLTIPS
-
-const tooltipTriggerList = document.querySelectorAll(
-  '[data-bs-toggle="tooltip"]'
-);
-const tooltipList = [...tooltipTriggerList].map(
-  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
-);
-
 // GLOBAL VARIABLES
-let dataList;
-
-//FETCHING THE RESULTS
-
-// searchButton.addEventListener("click", searchByKeywordAfterClick); //  how does this work with and without parentheses after function call? also how to call searhcByKeyword function expression?
-
-//with () calls the function wihtout waiting for click event, wihtout () will wait for event
-
-// function searchByKeywordAfterClick(event) {
-//   searchByKeyword(event);
-// }
-
-// GET URL FUNCTION FOR DYNAMIC FETCH WITH USER INPUT
-
-// function getUrl() {
-//   let url = `https://api.discogs.com/database/search?q=${input.value}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`;
-//   console.log(url);
-//   return url; //why doesnt work when use searchTerm.
-// } // this is not needed as moving the URL to inside the function makes the URL dynamic based on user input
-
-//FETCH.THEN EXPRESSION
-
-// function searchByKeyword(event) {
-//   const url = `https://api.discogs.com/database/search?q=${input.value}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`;
-//   event.preventDefault(); //without this the show of results after "click" doesnt work -why ? becaus the HTML form refreshes by default after clisking submit type button
-//   fetch(url)
-//     // fetch(getUrl())
-//     .then((response) => {
-//       document.getElementById("loader").style.display = "block";
-//       return response.json();
-//     })
-//     .then((data) => {
-//       document.getElementById("loader").style.display = "none";
-//       dataList = data.results;
-//       displayTable();
-//     });
-// }
+// let dataList;
 
 // ASYNC AWAIT EXPRESSION
-const input = document.getElementById("search-input");
 
-const searchByKeyword = async (event) => {
-  event.preventDefault();
-
+const getDataAsync = async () => {
+  const input = document.getElementById("search-input");
   const url = `https://api.discogs.com/database/search?q=${input.value}&token=iWbmjEPsBgNOQwxoCRmygmXAMLBaDXeFRTrEstaz`; // having url as global variable doesnt work because input gets defined as "" on first load and never gets updated after that
   const response = await fetch(url);
   const jsonResult = await response.json();
-  dataList = await jsonResult.results;
-  console.log(dataList);
-  displayGrid(dataList); //passing dataList here makes the display table to be connected to the await and so laod only when data is ready
-  filterByImage(dataList);
+  const data = replaceType(jsonResult.results);
+  return data;
+  //passing dataList here makes the display table to be connected to the await and so laod only when data is ready
+  // filterByImage(dataList);
 };
+
+//CONTROLLER
+
+async function controller(event) {
+  event.preventDefault();
+  const dataList = await getDataAsync();
+  console.log(dataList);
+  setEventListeners(dataList);
+  displayGrid(dataList);
+}
+
+controller();
+
+//REPLACE "MASTER" & "RELEASE" TYPE VALUES INTO "ALBUM"
+function replaceType(data) {
+  const replacedTypes = data.map((item) => {
+    if (item.type === "master") {
+      item.type = "album";
+    } else if (item.type === "release") {
+      item.type = "album";
+    }
+    return item;
+  });
+  return replacedTypes;
+}
 
 //CREATING THE GRID OF RESULTS
 const resultsContainer = document.getElementById("results-container");
 
 function displayGrid(data) {
-  resultsContainer.innerHTML = ""; // make sure it's not inside the loop so not repeat it for all items
+  resultsContainer.innerHTML = "";
   data.forEach((dataItem) => {
     //can use if statement for every i dividible by 3 and append everything until that point to to that div
 
@@ -95,11 +70,11 @@ function displayGrid(data) {
     const h5 = document.createElement("h5");
     h5.className = "card-title text-nowrap text-truncate";
     h5.innerHTML = dataItem.title;
-    h5.setAttribute("data-bs-toggle", "tooltip");
-    h5.setAttribute("title", dataItem.title); // why doesnt work? ask Lucas
+    h5.setAttribute("data-bs-toggle", "tooltip"); // Lucas
+    h5.setAttribute("title", dataItem.title);
 
     const h6_1 = document.createElement("h6");
-    h6_1.className = "text-muted card-type";
+    h6_1.className = "text-muted card-type tt";
     h6_1.innerHTML = dataItem.type.toUpperCase();
 
     const h6_2 = document.createElement("h6");
@@ -135,37 +110,12 @@ function displayGrid(data) {
   });
 }
 
-// const tbody = document.getElementById("tbody");
-
-// for (var i = 0; i < dataList.length; i++) {
-//   var tr = document.createElement("tr");
-//   var image = document.createElement("img");
-//   var imageUrl = dataList[i].cover_image;
-//   image.src = imageUrl;
-//   image.className = "rounded";
-//   image.style.height = "80px";
-//   image.style.width = "auto";
-//   image.style.objectFit = "cover";
-//   var td1 = document.createElement("td");
-//   var td2 = document.createElement("td");
-//   td2.className = "title";
-//   td2.innerHTML = dataList[i].title;
-//   var td3 = document.createElement("td");
-//   td3.innerHTML = dataList[i].type;
-
-//   td1.appendChild(image);
-//   tr.appendChild(td1);
-//   tr.appendChild(td2);
-//   tr.appendChild(td3);
-//   tbody.appendChild(tr);
-// }
-
 // FILTER SHOW MORE/LESS
-
-const filters = document.getElementById("filters-container");
 const filtersButton = document.getElementById("filters-button");
 
 function displayFilters() {
+  const filters = document.getElementById("filters-container");
+
   if (filters.style.display === "none") {
     filters.style.display = "block";
     filtersButton.innerHTML = "-";
@@ -175,96 +125,21 @@ function displayFilters() {
   }
 }
 
+// EVENT LISTENERS
+
 filtersButton.addEventListener("click", displayFilters);
+const searchButton = document.querySelector("#search-button");
+searchButton.addEventListener("click", controller);
 
-// function displayFilters() {
-//   console.log(filters.style.display);
-//   filters.style.display = "block";
-//   filtersButton.innerHTML = "-";
-//   console.log(filters.style.display);
-// }
-
-// filtersButton.addEventListener("click", displayFilters);
-
-// function closeFilters() {
-//   console.log(filters.style.display);
-//   if (filters.style.display === "block") {
-//     filters.style.display = "none";
-//     filtersButton.innerHTML = "+";
-//     console.log(filters.style.display);
-//   }
-// }
-
-// filtersButton.addEventListener("click", closeFilters); //this method doesnt work because it uses 2 eventlisteners for the same object?
-
-//SEARCH BAR TERM dataItem FILTERING BASED ON TITLE
-
-// const list = document.querySelectorAll(".title");
-// console.log(list);
-
-// const searchBar = document.forms["search-box"].querySelector("input");
-// searchBar.addEventListener("keyup", function (e) {
-//   const term = e.target.value.toLowerCase();
-//   const resultTitle = document.getElementsByTagName("tr");
-//   Array.from(resultTitle).forEach(function (placeholder) {
-//     const title = placeholder.secondElementChild.textContent;
-//     if (title.toLowerCase().indexOf(term) != -1) {
-//       placeholder.style.display = "block";
-//     } else {
-//       placeholder.style.display = "none";
-//     }
-//   });
-// });
-
-// function filterTable() {
-//   let input, tableBody, tableRow, titlesList, i, titleValue;
-//   input = document.getElementById("search-input");
-//   // inputUpperCase = input.value.toUpperCase();
-//   tableBody = document.getElementById("tbody");
-//   tableRow = tableBody.getElementsByTagName("tr");
-
-//   for (i = 0; i < tableRow.length; i++) {
-//     titlesList = tableRow[i].getElementsByTagName("td")[1]; // here it's taking the 1st index position of out of 3 td elements
-//     titleValue = titlesList.textContent || titlesList.innerText; // should only use innerText here ?
-//     console.log(titlesList);
-//     if (titlesList) {
-//       // here we are saying if titles dataList is present?
-//       if (titleValue.toUpperCase().indexOf(input.value.toUpperCase()) > -1) {
-//         //gets the index input.value within titleValues
-//         tableRow[i].style.display = ""; // this is needed to reset the list on keychange in the searchbar - don't understand this fully yet
-//       } else {
-//         tableRow[i].style.display = "none";
-//       }
-//     }
-//   }
-// }
-
-// FILTERS
-
-// const imageOnlyCheckbox = document.getElementById("image-only-check");
-// imageOnlyCheckbox.addEventListener("change", function (e) {
-//   const card = document.querySelector(".card");
-//   if (imageOnlyCheckbox.checked) {
-//     if (card.cover_image) {
-//       card.style.display = "block";
-//     } else {
-//       card.style.display = "none";
-//     }
-//   }
-// });
-
-function setEventListeners() {
-  const searchButton = document.querySelector("#search-button");
-  searchButton.addEventListener("click", searchByKeyword);
+function setEventListeners(data) {
   const checkboxes = document.querySelectorAll(".form-check-input");
   const checkBoxesArray = Array.from(checkboxes);
   checkBoxesArray.forEach((box) => {
-    //eventListeners cannot be added to all array-like items at once, need to use for loop for this
-    box.addEventListener("change", filterByImage);
+    box.addEventListener("change", () => combinedFilters(data)); //here needs to be written as a call back function otherwise JS calls it immediately
   });
 }
 
-setEventListeners();
+//GET "TYPE" CHECKED VALUES
 
 function getTypeCheckedValues() {
   const checkboxes = document.querySelectorAll(".check-type");
@@ -278,25 +153,27 @@ function getTypeCheckedValues() {
   return checkedValueArray;
 }
 
-function filterByType() {
+//FILTERS
+
+function filterByType(data) {
   const checkedValues = getTypeCheckedValues();
   const filteredResults = [];
-  console.log(checkedValues);
-  dataList.forEach((dataItem) => {
+  data.forEach((item) => {
     checkedValues.forEach((checkboxValue) => {
-      if (dataItem.type === checkboxValue) {
-        filteredResults.push(dataItem);
+      if (item.type === checkboxValue) {
+        filteredResults.push(item); //try to put into one filter function with replaceType (data);
       }
     });
   });
-  displayGrid(filteredResults);
-} // can I use .filter because I have several values to match? ask Lucas
 
-function filterByImage() {
+  displayGrid(filteredResults);
+  return filteredResults;
+}
+
+function filterByImage(data) {
   const imageCheckbox = document.getElementById("image-only-check");
-  console.log(imageCheckbox);
-  const filteredDataWithImages = dataList.filter((item) => {
-    console.log(imageCheckbox.checked);
+
+  const filteredDataWithImages = data.filter((item) => {
     if (imageCheckbox.checked) {
       return !item.cover_image.includes(".gif");
     } else {
@@ -308,4 +185,31 @@ function filterByImage() {
   return filteredDataWithImages;
 }
 
-//combining them
+//COMBINING FILTERS - continue from here
+
+function combinedFilters(data) {
+  const checkedValues = getTypeCheckedValues();
+  const filteredType = [];
+  const imageCheckbox = document.getElementById("image-only-check");
+
+  data.forEach((item) => {
+    checkedValues.forEach((checkboxValue) => {
+      if (item.type === checkboxValue) {
+        filteredType.push(item);
+      }
+    });
+  });
+
+  const imageFilter = filteredType.filter((item) => {
+    if (imageCheckbox.checked) {
+      return !item.cover_image.includes(".gif");
+    }
+  });
+
+  displayGrid(imageFilter);
+  return imageFilter;
+}
+
+//QS -  combining filters, where should loader be? in async await, tooltips,
+//bug when searching by keyword the filters dont work
+// image filter does not work when a new search term is entered or on first load, only when data is loaded

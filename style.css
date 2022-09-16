@@ -42,7 +42,12 @@ h1 {
 /* SEARCH BAR */
 
 .search-button {
-  border-radius: 50px;
+  border-radius: 70px;
+}
+
+.search-button:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
 }
 
 .search-input-box {
@@ -56,6 +61,15 @@ h1 {
 /* FILTERS */
 .filters-button {
   border-radius: 50%;
+  background-color: rgba(159, 96, 96, 0.077);
+  color: white;
+}
+
+.filters-button:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+  background-color: rgb(255, 250, 250);
+  border-color: rgb(255, 250, 250);
 }
 .filters-container {
   background-color: rgba(159, 96, 96, 0.077);
@@ -88,8 +102,17 @@ img {
 
 .add-to-library-btn {
   font-size: 12px;
+  border-radius: 15px;
+  color: rgb(150, 89, 175);
+  border-color: rgb(150, 89, 175);
 }
 
+.add-to-library-btn:hover {
+  background-color: rgb(150, 89, 175);
+  border-color: rgb(150, 89, 175);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  transition: box-shadow 0.3s ease-in-out;
+}
 .card-left-container {
   width: 80px;
 }
