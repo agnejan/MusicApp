@@ -21,10 +21,11 @@ async function controller(event) {
   const dataList = await getDataAsync();
   console.log(dataList);
   setEventListeners(dataList);
-  displayGrid(dataList);
+  combinedFilters(dataList);
+  // displayGrid(dataList);
 }
 
-controller();
+// controller () - calling this controller was the problem why the filters did not work om first load
 
 //REPLACE "MASTER" & "RELEASE" TYPE VALUES INTO "ALBUM"
 function replaceType(data) {
@@ -40,9 +41,9 @@ function replaceType(data) {
 }
 
 //CREATING THE GRID OF RESULTS
-const resultsContainer = document.getElementById("results-container");
 
 function displayGrid(data) {
+  const resultsContainer = document.getElementById("results-container");
   resultsContainer.innerHTML = "";
   data.forEach((dataItem) => {
     //can use if statement for every i dividible by 3 and append everything until that point to to that div
@@ -132,6 +133,10 @@ const searchButton = document.querySelector("#search-button");
 searchButton.addEventListener("click", controller);
 
 function setEventListeners(data) {
+  document
+    .querySelector("#genre-select")
+    .addEventListener("change", () => genreFilter(data));
+
   const checkboxes = document.querySelectorAll(".form-check-input");
   const checkBoxesArray = Array.from(checkboxes);
   checkBoxesArray.forEach((box) => {
@@ -139,12 +144,13 @@ function setEventListeners(data) {
   });
 }
 
-//GET "TYPE" CHECKED VALUES
+//GET "TYPE" CHECKBOX VALUES
 
 function getTypeCheckedValues() {
   const checkboxes = document.querySelectorAll(".check-type");
   const checkBoxesArray = Array.from(checkboxes);
   const checkedValueArray = [];
+
   checkBoxesArray.forEach((item) => {
     if (item.checked) {
       checkedValueArray.push(item.value);
@@ -155,61 +161,109 @@ function getTypeCheckedValues() {
 
 //FILTERS
 
-function filterByType(data) {
-  const checkedValues = getTypeCheckedValues();
-  const filteredResults = [];
-  data.forEach((item) => {
-    checkedValues.forEach((checkboxValue) => {
-      if (item.type === checkboxValue) {
-        filteredResults.push(item); //try to put into one filter function with replaceType (data);
-      }
-    });
-  });
+// const filteredByType2 = (data) => {
+//   const checkedValues = getTypeCheckedValues();
 
-  displayGrid(filteredResults);
-  return filteredResults;
-}
+//   const filteredByType = data.filter((item) => {
+//     if (checkedValues.length === 0) {
+//       return true;
+//     } else {
+//       return typeConditionFunction(data);
+//     }
+//   });
+//   console.log(filteredByType);
+//   displayGrid(filteredByType);
+// };
 
-function filterByImage(data) {
-  const imageCheckbox = document.getElementById("image-only-check");
+// function typeConditionFunction(data) {
+//   const checkedValues = getTypeCheckedValues();
+//   data.forEach((item) => {
+//     checkedValues.forEach((checkboxValue) => {
+//       item.type === checkboxValue;
+//     });
+//   });
+// }
 
-  const filteredDataWithImages = data.filter((item) => {
-    if (imageCheckbox.checked) {
-      return !item.cover_image.includes(".gif");
-    } else {
-      return true; //check this later
-    }
-  });
-  console.log(filteredDataWithImages);
-  displayGrid(filteredDataWithImages);
-  return filteredDataWithImages;
-}
+// const filteredByType = (data) => {
+//   const checkedValues = getTypeCheckedValues();
+//   const filteredDataByType = [];
+//   data.forEach((item) => {
+//     checkedValues.forEach((checkboxValue) => {
+//       if (item.type === checkboxValue) {
+//         filteredDataByType.push(item); //try to put into one filter function with replaceType (data);
+//       }
+//     });
+//   });
 
-//COMBINING FILTERS - continue from here
+//   displayGrid(filteredDataByType);
+
+//   return filteredDataByType;
+// };
+
+// const filteredByImage = (data) => {
+//   const imageCheckbox = document.getElementById("image-only-check");
+
+//   const filteredDataWithImages = data.filter((item) => {
+//     if (imageCheckbox.checked) {
+//       return !item.cover_image.includes(".gif");
+//     } else {
+//       return true; //this returns everything, because the condition is true
+//     }
+//   });
+//   console.log(filteredDataWithImages);
+//   displayGrid(filteredDataWithImages);
+//   return filteredDataWithImages;
+// };
+
+//COMBINED FILTERS
 
 function combinedFilters(data) {
-  const checkedValues = getTypeCheckedValues();
-  const filteredType = [];
   const imageCheckbox = document.getElementById("image-only-check");
-
-  data.forEach((item) => {
-    checkedValues.forEach((checkboxValue) => {
-      if (item.type === checkboxValue) {
-        filteredType.push(item);
-      }
-    });
-  });
-
-  const imageFilter = filteredType.filter((item) => {
-    if (imageCheckbox.checked) {
+  const checkedTypeValues = getTypeCheckedValues();
+  const genreSelectValue = document.querySelector("#genre-select").value;
+  console.log(checkedTypeValues);
+  const filteredData = data.filter((item) => {
+    if (checkedTypeValues.length === 0 && imageCheckbox.checked) {
       return !item.cover_image.includes(".gif");
+    } else if (checkedTypeValues.length === 0) {
+      return true;
+    } else if (imageCheckbox.checked) {
+      return (
+        !item.cover_image.includes(".gif") &&
+        item.type.includes(checkedTypeValues)
+      );
+    } else {
+      return item.type.includes(checkedTypeValues);
     }
   });
 
-  displayGrid(imageFilter);
-  return imageFilter;
+  console.log(filteredData);
+  displayGrid(filteredData);
 }
 
-//QS -  combining filters, where should loader be? in async await, tooltips,
-//bug when searching by keyword the filters dont work
-// image filter does not work when a new search term is entered or on first load, only when data is loaded
+function genreFilter(data) {
+  const genreSelectValue = document.querySelector("#genre-select").value;
+  const filteredByGenre = data.filter((item) => {
+    const itemGenre = item.genre;
+
+    console.log(itemGenre);
+
+    // return itemGenre.includes(genreSelectValue);
+  });
+  console.log(filteredByGenre);
+}
+
+//
+
+arrayOfElements.map((element) => {
+  return {
+    ...element,
+    subElements: element.subElements.filter(
+      (subElement) => subElement.surname === 1
+    ),
+  };
+});
+//QS -
+
+//ISSUES
+//where should loader be ? in async await, tooltips,

@@ -117,6 +117,7 @@ const filterByDropDown = (games) => {
 const combineFilters = (games) => {
   const datePickerValue = document.querySelector("#date").value;
   const dropDownValue = document.querySelector("#leagueDropdown").value;
+
   console.log("datePickerValue", datePickerValue);
   const filteredGames = games.filter((game) => {
     const datePickerDate = new Date(datePickerValue).setHours(0, 0, 0, 0);
