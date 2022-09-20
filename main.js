@@ -1,6 +1,3 @@
-// GLOBAL VARIABLES
-// let dataList;
-
 // ASYNC AWAIT EXPRESSION
 
 const getDataAsync = async () => {
@@ -22,6 +19,7 @@ async function controller(event) {
   console.log(dataList);
   setEventListeners(dataList);
   combinedFilters(dataList);
+  genreFilter(dataList);
   // displayGrid(dataList);
 }
 
@@ -80,14 +78,6 @@ function displayGrid(data) {
 
     const h6_2 = document.createElement("h6");
     h6_2.className = "text-muted card-year";
-    // const yearOfResult = dataItem.year;
-    // const correctedYear = function () {
-    //   if (yearOfResult === "undefined") {
-    //     yearOfResult = "";
-    //   }
-    //   return yearOfResult;
-    // }; why this didnt work ? ask Lucas
-
     h6_2.innerHTML = dataItem.year ?? " ";
 
     const h6_3 = document.createElement("h6");
@@ -159,62 +149,6 @@ function getTypeCheckedValues() {
   return checkedValueArray;
 }
 
-//FILTERS
-
-// const filteredByType2 = (data) => {
-//   const checkedValues = getTypeCheckedValues();
-
-//   const filteredByType = data.filter((item) => {
-//     if (checkedValues.length === 0) {
-//       return true;
-//     } else {
-//       return typeConditionFunction(data);
-//     }
-//   });
-//   console.log(filteredByType);
-//   displayGrid(filteredByType);
-// };
-
-// function typeConditionFunction(data) {
-//   const checkedValues = getTypeCheckedValues();
-//   data.forEach((item) => {
-//     checkedValues.forEach((checkboxValue) => {
-//       item.type === checkboxValue;
-//     });
-//   });
-// }
-
-// const filteredByType = (data) => {
-//   const checkedValues = getTypeCheckedValues();
-//   const filteredDataByType = [];
-//   data.forEach((item) => {
-//     checkedValues.forEach((checkboxValue) => {
-//       if (item.type === checkboxValue) {
-//         filteredDataByType.push(item); //try to put into one filter function with replaceType (data);
-//       }
-//     });
-//   });
-
-//   displayGrid(filteredDataByType);
-
-//   return filteredDataByType;
-// };
-
-// const filteredByImage = (data) => {
-//   const imageCheckbox = document.getElementById("image-only-check");
-
-//   const filteredDataWithImages = data.filter((item) => {
-//     if (imageCheckbox.checked) {
-//       return !item.cover_image.includes(".gif");
-//     } else {
-//       return true; //this returns everything, because the condition is true
-//     }
-//   });
-//   console.log(filteredDataWithImages);
-//   displayGrid(filteredDataWithImages);
-//   return filteredDataWithImages;
-// };
-
 //COMBINED FILTERS
 
 function combinedFilters(data) {
@@ -230,10 +164,10 @@ function combinedFilters(data) {
     } else if (imageCheckbox.checked) {
       return (
         !item.cover_image.includes(".gif") &&
-        item.type.includes(checkedTypeValues)
+        checkedTypeValues.includes(item.type)
       );
     } else {
-      return item.type.includes(checkedTypeValues);
+      return checkedTypeValues.includes(item.type);
     }
   });
 
@@ -241,19 +175,20 @@ function combinedFilters(data) {
   displayGrid(filteredData);
 }
 
+// GENRE FILTER
+
 function genreFilter(data) {
   const genreSelectValue = document.querySelector("#genre-select").value;
   const filteredByGenre = data.filter((item) => {
-    const itemGenre = item.genre;
-
-    console.log(itemGenre);
-
-    // return itemGenre.includes(genreSelectValue);
+    if (item.genre) {
+      return (
+        item.genre.includes(genreSelectValue) || genreSelectValue === "All"
+      );
+    }
+    console.log(item.genre);
   });
-  console.log(filteredByGenre);
+  displayGrid(filteredByGenre);
 }
 
-//
-
 //ISSUES
-//where should loader be ? in async await, tooltips,
+//where should loader be in async await, tooltips not generating in DisplayGrid function

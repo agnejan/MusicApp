@@ -229,7 +229,38 @@ filtersButton.addEventListener("click", displayFilters);
 //   }
 // }
 
-// FILTERS
+//FILTERS
+
+// const filteredByType = (data) => {
+//   const checkedValues = getTypeCheckedValues();
+//   const filteredDataByType = [];
+//   data.forEach((item) => {
+//     checkedValues.forEach((checkboxValue) => {
+//       if (item.type === checkboxValue) {
+//         filteredDataByType.push(item); //try to put into one filter function with replaceType (data);
+//       }
+//     });
+//   });
+
+//   displayGrid(filteredDataByType);
+
+//   return filteredDataByType;
+// };
+
+// const filteredByImage = (data) => {
+//   const imageCheckbox = document.getElementById("image-only-check");
+
+//   const filteredDataWithImages = data.filter((item) => {
+//     if (imageCheckbox.checked) {
+//       return !item.cover_image.includes(".gif");
+//     } else {
+//       return true; //this returns everything, because the condition is true
+//     }
+//   });
+//   console.log(filteredDataWithImages);
+//   displayGrid(filteredDataWithImages);
+//   return filteredDataWithImages;
+// };
 
 // const imageOnlyCheckbox = document.getElementById("image-only-check");
 // imageOnlyCheckbox.addEventListener("change", function (e) {
