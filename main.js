@@ -255,15 +255,5 @@ function genreFilter(data) {
 
 //
 
-arrayOfElements.map((element) => {
-  return {
-    ...element,
-    subElements: element.subElements.filter(
-      (subElement) => subElement.surname === 1
-    ),
-  };
-});
-//QS -
-
 //ISSUES
 //where should loader be ? in async await, tooltips,
